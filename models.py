@@ -22,9 +22,85 @@ def parse_text_into_params(text):
     return title, subtitle, author, image_code, theme
 
 
-def generate_image(title, top_text, author, image_code, theme, guide_text_placement='bottom_right',
-                   guide_text='The Definitive Guide'):
-    # Define the color themes
+def load_fonts(base_dir):
+    font_paths = {
+        'italic': os.path.join(base_dir, 'fonts', 'Garamond LightItalic.ttf'),
+        'regular': os.path.join(base_dir, 'fonts', 'Garamond Light.ttf'),
+        'helvetica': os.path.join(base_dir, 'fonts', 'HelveticaNeue-Medium.otf'),
+        'helvetica_bold': os.path.join(base_dir, 'fonts', 'Helvetica Bold.ttf')
+    }
+
+    fonts = {
+        'top': ImageFont.truetype(font_paths['italic'], 20),
+        'subtitle': ImageFont.truetype(font_paths['italic'], 34),
+        'author': ImageFont.truetype(font_paths['italic'], 24),
+        'title': ImageFont.truetype(font_paths['regular'], 62),
+        'orielly': ImageFont.truetype(font_paths['helvetica'], 28),
+        'question_mark': ImageFont.truetype(font_paths['helvetica_bold'], 16)
+    }
+    return fonts, font_paths
+
+
+def draw_top_text(draw, text, width, font):
+    text = sanitize_unicode(text, font.path)
+    text_width = draw.textlength(text, font)
+    text_position_x = (width / 2) - (text_width / 2)
+
+    draw.text((text_position_x, 10), text, fill='black', font=font)
+
+
+def draw_title(draw, title, width, theme_color, font_paths):
+    title_font, new_title = clamp_title_text(sanitize_unicode(title, font_paths['regular']), width - 80)
+    if new_title is None:
+        raise ValueError('Title too long')
+
+    text_width, text_height = draw.multiline_textsize(new_title, title_font)
+    draw.rectangle([(20, 400), (width - 20, 400 + text_height + 40)], fill=theme_color)
+    draw.multiline_text((40, 420), new_title, fill='white', font=title_font)
+    return text_height
+
+
+def draw_subtitle(draw, subtitle, title_text_height, width, font, guide_text_placement):
+    subtitle = sanitize_unicode(subtitle, font.path)
+
+    text_width, text_height = textsize(subtitle, font)
+    if guide_text_placement == 'top_left':
+        text_position_x = 20
+        text_position_y = 400 - text_height - 2
+    elif guide_text_placement == 'top_right':
+        text_position_x = width - 20 - text_width
+        text_position_y = 400 - text_height - 2
+    elif guide_text_placement == 'bottom_left':
+        text_position_y = 400 + title_text_height + 40
+        text_position_x = 20
+    else:  # bottom_right is default
+        text_position_y = 400 + title_text_height + 40
+        text_position_x = width - 20 - text_width
+
+    draw.text((text_position_x, text_position_y), subtitle, fill='black', font=font)
+
+
+def draw_orielly(draw, height, font_text, font_question_mark, theme_color):
+    oreilly_text = "O RLY"
+    text_width = draw.textlength(oreilly_text, font_text)
+    text_height = font_text.size * 1
+    text_position_x = 20
+    text_position_y = height - text_height - 20
+    draw.text((text_position_x, text_position_y), oreilly_text, fill='black', font=font_text)
+
+    draw.text((text_position_x + text_width, text_position_y - 1), "?", fill=theme_color, font=font_question_mark)
+
+
+def draw_author(draw, text, width, height, font):
+    text = sanitize_unicode(text, font.path)
+    text_width = draw.textlength(text, font)
+    text_height = font.size * 1
+    text_position_x = width - text_width - 20
+    text_position_y = height - text_height - 20
+    draw.text((text_position_x, text_position_y), text, fill='black', font=font)
+
+
+def generate_image(title, top_text, author, image_code, theme, guide_text_placement, guide_text):
     theme_colors = {
         "0": (85, 19, 93, 255), "1": (113, 112, 110, 255), "2": (128, 27, 42, 255), "3": (184, 7, 33, 255),
         "4": (101, 22, 28, 255), "5": (80, 61, 189, 255), "6": (225, 17, 5, 255), "7": (6, 123, 176, 255),
@@ -34,93 +110,24 @@ def generate_image(title, top_text, author, image_code, theme, guide_text_placem
     }
     theme_color = theme_colors.get(theme, (255, 255, 255, 255))
 
-    # Create an image canvas
     width, height = 500, 700
     im = Image.new('RGBA', (width, height), "white")
-
-    # Font paths
     base_dir = os.path.dirname(os.path.realpath(__file__))
-    font_path = os.path.join(base_dir, 'fonts', 'Garamond Light.ttf')
-    font_path_helv = os.path.join(base_dir, 'fonts', 'HelveticaNeue-Medium.otf')
-    font_path_helv_bold = os.path.join(base_dir, 'fonts', 'Helvetica Bold.ttf')
-    font_path_italic = os.path.join(base_dir, 'fonts', 'Garamond LightItalic.ttf')
+    fonts, font_paths = load_fonts(base_dir)
 
-    # Load fonts
-    top_font = ImageFont.truetype(font_path_italic, 20)
-    subtitle_font = ImageFont.truetype(font_path_italic, 34)
-    author_font = ImageFont.truetype(font_path_italic, 24)
-    title_font = ImageFont.truetype(font_path, 62)
-    orielly_font = ImageFont.truetype(font_path_helv, 28)
-    question_mark_font = ImageFont.truetype(font_path_helv_bold, 16)
-
-    # Draw
     draw = ImageDraw.Draw(im)
     draw.rectangle(((20, 0), (width - 20, 10)), fill=theme_color)
 
-    # Draw text
-    top_text = sanitize_unicode(top_text, font_path_italic)
-    textWidth, textHeight = textsize(top_text, top_font)
-    textPositionX = (width / 2) - (textWidth / 2)
+    draw_top_text(draw, top_text, width, fonts['top'])
+    title_text_height = draw_title(draw, title, width, theme_color, font_paths)
+    draw_subtitle(draw, guide_text, title_text_height, width, fonts['subtitle'], guide_text_placement)
+    draw_orielly(draw, height, fonts['orielly'], fonts['question_mark'], theme_color)
+    draw_author(draw, author, width, height, fonts['author'])
 
-    draw.text((textPositionX, 10), top_text, fill='black', font=top_font)
-
-    author = sanitize_unicode(author, font_path_italic)
-    textWidth, textHeight = textsize(author, author_font)
-    textPositionX = width - textWidth - 20
-    textPositionY = height - textHeight - 20
-
-    draw.text((textPositionX, textPositionY), author, fill='black', font=author_font)
-
-    oreillyText = "O RLY"
-
-    textWidth, textHeight = textsize(oreillyText, orielly_font)
-    textPositionX = 20
-    textPositionY = height - textHeight - 20
-
-    draw.text((textPositionX, textPositionY), oreillyText, fill='black', font=orielly_font)
-
-    oreillyText = "?"
-
-    textPositionX = textPositionX + textWidth
-
-    draw.text((textPositionX, textPositionY - 1), oreillyText, fill=theme_color, font=question_mark_font)
-
-    title_font, newTitle = clamp_title_text(sanitize_unicode(title, font_path), width - 80)
-    if newTitle == None:
-        raise ValueError('Title too long')
-
-    textWidth, textHeight = draw.multiline_textsize(newTitle, title_font)
-    draw.rectangle([(20, 400), (width - 20, 400 + textHeight + 40)], fill=theme_color)
-
-    subtitle = sanitize_unicode(guide_text, font_path_italic)
-
-    if guide_text_placement == 'top_left':
-        textWidth, textHeight = textsize(subtitle, subtitle_font)
-        textPositionX = 20
-        textPositionY = 400 - textHeight - 2
-    elif guide_text_placement == 'top_right':
-        textWidth, textHeight = textsize(subtitle, subtitle_font)
-        textPositionX = width - 20 - textWidth
-        textPositionY = 400 - textHeight - 2
-    elif guide_text_placement == 'bottom_left':
-        textPositionY = 400 + textHeight + 40
-        textWidth, textHeight = textsize(subtitle, subtitle_font)
-        textPositionX = 20
-    else:  # bottom_right is default
-        textPositionY = 400 + textHeight + 40
-        textWidth, textHeight = textsize(subtitle, subtitle_font)
-        textPositionX = width - 20 - textWidth
-
-    draw.text((textPositionX, textPositionY), subtitle, fill='black', font=subtitle_font)
-
-    draw.multiline_text((40, 420), newTitle, fill='white', font=title_font)
-
-    # Load and place the animal image
     animal_image_path = os.path.join(base_dir, 'images', f'{image_code}.png')
     animal_image = Image.open(animal_image_path).convert('RGBA')
     im.paste(animal_image, (80, 40), animal_image)
 
-    # Save the final image
     final_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ('%s.png' % datetime.datetime.now())))
     im.save(final_path)
     im.close()
@@ -143,35 +150,24 @@ def clamp_title_text(title, width):
     dr = ImageDraw.Draw(im)
 
     font_path_italic = os.path.abspath(os.path.join(os.path.dirname(__file__), 'fonts', 'Garamond Light.ttf'))
-    # try and fit title on one line
-    font = None
+    start_font_size, end_font_size = 80, 61
 
-    startFontSize = 80
-    endFontSize = 61
-
-    for fontSize in range(startFontSize, endFontSize, -1):
-        font = ImageFont.truetype(font_path_italic, fontSize)
+    for font_size in range(start_font_size, end_font_size, -1):
+        font = ImageFont.truetype(font_path_italic, font_size)
         w, h = textsize(title, font)
-
         if w < width:
             return font, title
 
-    # try and fit title on two lines
-    startFontSize = 80
-    endFontSize = 34
-
-    for fontSize in range(startFontSize, endFontSize, -1):
-        font = ImageFont.truetype(font_path_italic, fontSize)
-
-        for match in list(re.finditer('\s', title, re.UNICODE)):
-            newTitle = u''.join((title[:match.start()], u'\n', title[(match.start() + 1):]))
-            substringWidth, h = dr.multiline_textsize(newTitle, font)
-
-            if substringWidth < width:
-                return font, newTitle
+    start_font_size, end_font_size = 80, 34
+    for font_size in range(start_font_size, end_font_size, -1):
+        font = ImageFont.truetype(font_path_italic, font_size)
+        for match in re.finditer(r'\s', title):
+            new_title = title[:match.start()] + '\n' + title[match.start() + 1:]
+            substring_width, h = dr.multiline_textsize(new_title, font)
+            if substring_width < width:
+                return font, new_title
 
     im.close()
-
     return None, None
 
 

@@ -13,12 +13,14 @@ def generate():
         data = request.args
 
     title = data.get('title', 'Sample Title')
-    topText = data.get('topText', 'Sample Top Text')
+    top_text = data.get('topText', 'Sample Top Text')
     author = data.get('author', 'Author Name')
     image_code = data.get('image_code', '1')
     theme = data.get('theme', '0')
+    guide_text_placement = data.get('guide_text_placement', 'bottom_right')
+    guide_text = data.get('guide_text', 'The Definitive Guide')
 
-    final_path = generate_image(title, topText, author, image_code, theme)
+    final_path = generate_image(title, top_text, author, image_code, theme, guide_text_placement, guide_text)
     print(f"Image generated: {final_path}")
     return send_file(final_path, mimetype='image/png')
 
