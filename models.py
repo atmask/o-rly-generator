@@ -5,7 +5,7 @@ import re
 from PIL import Image, ImageDraw, ImageFont
 from fontTools.ttLib import TTFont
 
-SCALE_FACTOR = 3
+SCALE_FACTOR = 2
 
 
 def load_fonts(base_dir):
@@ -40,7 +40,7 @@ def draw_title(draw, title, width, theme_color, font_paths):
     if new_title is None:
         raise ValueError('Title too long')
 
-    text_width, text_height = draw.multiline_textsize(new_title, title_font)
+    text_width, text_height = multiline_textsize(new_title, title_font)
     draw.rectangle([(20 * SCALE_FACTOR, 400 * SCALE_FACTOR),
                     (width - 20 * SCALE_FACTOR, 400 * SCALE_FACTOR + text_height + 40 * SCALE_FACTOR)],
                    fill=theme_color)
@@ -116,11 +116,11 @@ def generate_image(title, top_text, author, image_code, theme, guide_text_placem
     animal_image_path = os.path.join(base_dir, 'images', f'{image_code}.png')
     animal_image = Image.open(animal_image_path).convert('RGBA')
     animal_image = animal_image.resize(
-        (int(animal_image.width * SCALE_FACTOR), int(animal_image.height * SCALE_FACTOR)), Image.ANTIALIAS)
+        ((animal_image.width - 5) * SCALE_FACTOR, (animal_image.height - 5) * SCALE_FACTOR))
     im.paste(animal_image, (80 * SCALE_FACTOR, 40 * SCALE_FACTOR), animal_image)
 
     final_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ('%s.jpeg' % datetime.datetime.now())))
-    im.save(final_path, format='JPEG', quality=100)
+    im.save(final_path, format='JPEG', quality=80, optimize=True)
     im.close()
 
     return final_path
@@ -145,7 +145,7 @@ def clamp_title_text(title, width):
 
     for font_size in range(start_font_size, end_font_size, -1):
         font = ImageFont.truetype(font_path_italic, font_size)
-        w, h = textsize(title, font)
+        w = dr.textlength(title, font)
         if w < width:
             return font, title
 
@@ -154,7 +154,7 @@ def clamp_title_text(title, width):
         font = ImageFont.truetype(font_path_italic, font_size)
         for match in re.finditer(r'\s', title):
             new_title = title[:match.start()] + '\n' + title[match.start() + 1:]
-            substring_width, h = dr.multiline_textsize(new_title, font)
+            substring_width, h = multiline_textsize(new_title, font)
             if substring_width < width:
                 return font, new_title
 
@@ -166,4 +166,11 @@ def textsize(text, font):
     im = Image.new(mode="P", size=(0, 0))
     draw = ImageDraw.Draw(im)
     _, _, width, height = draw.textbbox((0, 0), text=text, font=font)
+    return width, height
+
+
+def multiline_textsize(text, font):
+    im = Image.new(mode="P", size=(0, 0))
+    draw = ImageDraw.Draw(im)
+    _, _, width, height = draw.multiline_textbbox((0, 0), text=text, font=font)
     return width, height

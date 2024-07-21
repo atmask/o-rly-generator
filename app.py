@@ -14,9 +14,9 @@ def generate():
     else:
         data = request.args
 
-    title = data.get('title', 'Sample Title')
-    top_text = data.get('topText', 'Sample Top Text')
-    author = data.get('author', 'Author Name')
+    title = data.get('title', 'Some Title')
+    top_text = data.get('topText', 'Some Top Text')
+    author = data.get('author', 'Some Developer')
     image_code = data.get('image_code', str(random.randrange(1, 41)))
     theme = data.get('theme', str(random.randrange(0, 17)))
     guide_text_placement = data.get('guide_text_placement', 'bottom_right')
@@ -24,7 +24,7 @@ def generate():
 
     final_path = generate_image(title, top_text, author, image_code, theme, guide_text_placement, guide_text)
     print(f"Image generated: {final_path}")
-    return send_file(final_path, mimetype='image/png')
+    return send_file(final_path, mimetype='image/jpeg')
 
 
 if __name__ == "__main__":
