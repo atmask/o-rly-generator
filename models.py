@@ -36,7 +36,8 @@ def draw_top_text(draw, text, width, font):
 
 
 def draw_title(draw, title, width, theme_color, font_paths):
-    title_font, new_title = clamp_title_text(sanitize_unicode(title, font_paths['regular']), width - 80 * SCALE_FACTOR)
+    title_font, new_title = clamp_title_text(sanitize_unicode(title, font_paths['regular']), width - 80 * SCALE_FACTOR,
+                                             font_paths['regular'])
     if new_title is None:
         raise ValueError('Title too long')
 
@@ -136,22 +137,21 @@ def sanitize_unicode(string, font_file_path):
     return sanitized_string
 
 
-def clamp_title_text(title, width):
+def clamp_title_text(title, width, font_path_regular):
     im = Image.new('RGBA', (500 * SCALE_FACTOR, 500 * SCALE_FACTOR), "white")
     dr = ImageDraw.Draw(im)
 
-    font_path_italic = os.path.abspath(os.path.join(os.path.dirname(__file__), 'fonts', 'Garamond Light.ttf'))
     start_font_size, end_font_size = 80 * SCALE_FACTOR, 61 * SCALE_FACTOR
 
     for font_size in range(start_font_size, end_font_size, -1):
-        font = ImageFont.truetype(font_path_italic, font_size)
+        font = ImageFont.truetype(font_path_regular, font_size)
         w = dr.textlength(title, font)
         if w < width:
             return font, title
 
     start_font_size, end_font_size = 80 * SCALE_FACTOR, 34 * SCALE_FACTOR
     for font_size in range(start_font_size, end_font_size, -1):
-        font = ImageFont.truetype(font_path_italic, font_size)
+        font = ImageFont.truetype(font_path_regular, font_size)
         for match in re.finditer(r'\s', title):
             new_title = title[:match.start()] + '\n' + title[match.start() + 1:]
             substring_width, h = multiline_textsize(new_title, font)
