@@ -120,8 +120,8 @@ def generate_image(title, top_text, author, image_code, theme, guide_text_placem
         ((animal_image.width - 5) * SCALE_FACTOR, (animal_image.height - 5) * SCALE_FACTOR))
     im.paste(animal_image, (80 * SCALE_FACTOR, 40 * SCALE_FACTOR), animal_image)
 
-    final_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ('%s.jpeg' % datetime.datetime.now())))
-    im.save(final_path, format='JPEG', quality=80, optimize=True)
+    final_path = os.path.abspath(os.path.join(os.path.dirname(__file__), f'{datetime.datetime.now()}.jpeg'))
+    im.save(final_path, format='JPEG', quality=70, optimize=True, subsampling=0)
     im.close()
 
     return final_path

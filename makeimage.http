@@ -1,0 +1,11 @@
+# curl --location 'http://127.0.0.1:5000/generate?topText=Learn%2BFlask&author=Jane%2BDoe&image_code=15&theme=2&guide_text_placement=bottom_left&guide_text=Enforcing&title=Useless%20Code%20Metrics%20For%20Dummies'
+GET http://127.0.0.1:5000/generate
+    ?title=Useless Code Metrics For Dummies
+    &topText=Learn Flask
+    &author=Jane Doe
+    &image_code=15
+    &theme=2
+    &guide_text_placement=bottom_left
+    &guide_text=Enforcing
+
+###
