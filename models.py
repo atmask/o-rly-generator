@@ -1,25 +1,11 @@
 import datetime
 import os
-import random
 import re
-from urllib.parse import unquote_plus
 
 from PIL import Image, ImageDraw, ImageFont
 from fontTools.ttLib import TTFont
 
-
-def parse_text_into_params(text):
-    text = unquote_plus(text).strip()
-    text = text[:-1] if text[-1] == ";" else text
-    params = text.split(";")
-
-    title = params.pop(0).strip() if params else "Default Title"
-    subtitle = params.pop(0).strip() if params else "Default Subtitle"
-    author = params.pop(0).strip() if params else "Default Author"
-    image_code = params.pop(0).strip() if params else str(random.randrange(1, 41))
-    theme = params.pop(0).strip() if params else str(random.randrange(0, 17))
-
-    return title, subtitle, author, image_code, theme
+SCALE_FACTOR = 3
 
 
 def load_fonts(base_dir):
@@ -31,12 +17,12 @@ def load_fonts(base_dir):
     }
 
     fonts = {
-        'top': ImageFont.truetype(font_paths['italic'], 20),
-        'subtitle': ImageFont.truetype(font_paths['italic'], 34),
-        'author': ImageFont.truetype(font_paths['italic'], 24),
-        'title': ImageFont.truetype(font_paths['regular'], 62),
-        'orielly': ImageFont.truetype(font_paths['helvetica'], 28),
-        'question_mark': ImageFont.truetype(font_paths['helvetica_bold'], 16)
+        'top': ImageFont.truetype(font_paths['italic'], 20 * SCALE_FACTOR),
+        'subtitle': ImageFont.truetype(font_paths['italic'], 34 * SCALE_FACTOR),
+        'author': ImageFont.truetype(font_paths['italic'], 24 * SCALE_FACTOR),
+        'title': ImageFont.truetype(font_paths['regular'], 62 * SCALE_FACTOR),
+        'orielly': ImageFont.truetype(font_paths['helvetica'], 28 * SCALE_FACTOR),
+        'question_mark': ImageFont.truetype(font_paths['helvetica_bold'], 16 * SCALE_FACTOR)
     }
     return fonts, font_paths
 
@@ -46,17 +32,19 @@ def draw_top_text(draw, text, width, font):
     text_width = draw.textlength(text, font)
     text_position_x = (width / 2) - (text_width / 2)
 
-    draw.text((text_position_x, 10), text, fill='black', font=font)
+    draw.text((text_position_x, 10 * SCALE_FACTOR), text, fill='black', font=font)
 
 
 def draw_title(draw, title, width, theme_color, font_paths):
-    title_font, new_title = clamp_title_text(sanitize_unicode(title, font_paths['regular']), width - 80)
+    title_font, new_title = clamp_title_text(sanitize_unicode(title, font_paths['regular']), width - 80 * SCALE_FACTOR)
     if new_title is None:
         raise ValueError('Title too long')
 
     text_width, text_height = draw.multiline_textsize(new_title, title_font)
-    draw.rectangle([(20, 400), (width - 20, 400 + text_height + 40)], fill=theme_color)
-    draw.multiline_text((40, 420), new_title, fill='white', font=title_font)
+    draw.rectangle([(20 * SCALE_FACTOR, 400 * SCALE_FACTOR),
+                    (width - 20 * SCALE_FACTOR, 400 * SCALE_FACTOR + text_height + 40 * SCALE_FACTOR)],
+                   fill=theme_color)
+    draw.multiline_text((40 * SCALE_FACTOR, 420 * SCALE_FACTOR), new_title, fill='white', font=title_font)
     return text_height
 
 
@@ -65,17 +53,17 @@ def draw_subtitle(draw, subtitle, title_text_height, width, font, guide_text_pla
 
     text_width, text_height = textsize(subtitle, font)
     if guide_text_placement == 'top_left':
-        text_position_x = 20
-        text_position_y = 400 - text_height - 2
+        text_position_x = 20 * SCALE_FACTOR
+        text_position_y = 400 * SCALE_FACTOR - text_height - 2 * SCALE_FACTOR
     elif guide_text_placement == 'top_right':
-        text_position_x = width - 20 - text_width
-        text_position_y = 400 - text_height - 2
+        text_position_x = width - 20 * SCALE_FACTOR - text_width
+        text_position_y = 800 * SCALE_FACTOR - text_height - 2 * SCALE_FACTOR
     elif guide_text_placement == 'bottom_left':
-        text_position_y = 400 + title_text_height + 40
-        text_position_x = 20
+        text_position_y = 400 * SCALE_FACTOR + title_text_height + 40 * SCALE_FACTOR
+        text_position_x = 20 * SCALE_FACTOR
     else:  # bottom_right is default
-        text_position_y = 400 + title_text_height + 40
-        text_position_x = width - 20 - text_width
+        text_position_y = 400 * SCALE_FACTOR + title_text_height + 40 * SCALE_FACTOR
+        text_position_x = width - 20 * SCALE_FACTOR - text_width
 
     draw.text((text_position_x, text_position_y), subtitle, fill='black', font=font)
 
@@ -84,19 +72,20 @@ def draw_orielly(draw, height, font_text, font_question_mark, theme_color):
     oreilly_text = "O RLY"
     text_width = draw.textlength(oreilly_text, font_text)
     text_height = font_text.size * 1
-    text_position_x = 20
-    text_position_y = height - text_height - 20
+    text_position_x = 20 * SCALE_FACTOR
+    text_position_y = height - text_height - 20 * SCALE_FACTOR
     draw.text((text_position_x, text_position_y), oreilly_text, fill='black', font=font_text)
 
-    draw.text((text_position_x + text_width, text_position_y - 1), "?", fill=theme_color, font=font_question_mark)
+    draw.text((text_position_x + text_width, text_position_y - 1 * SCALE_FACTOR), "?", fill=theme_color,
+              font=font_question_mark)
 
 
 def draw_author(draw, text, width, height, font):
     text = sanitize_unicode(text, font.path)
     text_width = draw.textlength(text, font)
     text_height = font.size * 1
-    text_position_x = width - text_width - 20
-    text_position_y = height - text_height - 20
+    text_position_x = width - text_width - 20 * SCALE_FACTOR
+    text_position_y = height - text_height - 20 * SCALE_FACTOR
     draw.text((text_position_x, text_position_y), text, fill='black', font=font)
 
 
@@ -110,13 +99,13 @@ def generate_image(title, top_text, author, image_code, theme, guide_text_placem
     }
     theme_color = theme_colors.get(theme, (255, 255, 255, 255))
 
-    width, height = 500, 700
-    im = Image.new('RGBA', (width, height), "white")
+    width, height = 500 * SCALE_FACTOR, 700 * SCALE_FACTOR
+    im = Image.new('RGB', (width, height), "white")
     base_dir = os.path.dirname(os.path.realpath(__file__))
     fonts, font_paths = load_fonts(base_dir)
 
     draw = ImageDraw.Draw(im)
-    draw.rectangle(((20, 0), (width - 20, 10)), fill=theme_color)
+    draw.rectangle(((20 * SCALE_FACTOR, 0), (width - 20 * SCALE_FACTOR, 10 * SCALE_FACTOR)), fill=theme_color)
 
     draw_top_text(draw, top_text, width, fonts['top'])
     title_text_height = draw_title(draw, title, width, theme_color, font_paths)
@@ -126,10 +115,12 @@ def generate_image(title, top_text, author, image_code, theme, guide_text_placem
 
     animal_image_path = os.path.join(base_dir, 'images', f'{image_code}.png')
     animal_image = Image.open(animal_image_path).convert('RGBA')
-    im.paste(animal_image, (80, 40), animal_image)
+    animal_image = animal_image.resize(
+        (int(animal_image.width * SCALE_FACTOR), int(animal_image.height * SCALE_FACTOR)), Image.ANTIALIAS)
+    im.paste(animal_image, (80 * SCALE_FACTOR, 40 * SCALE_FACTOR), animal_image)
 
-    final_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ('%s.png' % datetime.datetime.now())))
-    im.save(final_path)
+    final_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ('%s.jpeg' % datetime.datetime.now())))
+    im.save(final_path, format='JPEG', quality=100)
     im.close()
 
     return final_path
@@ -146,11 +137,11 @@ def sanitize_unicode(string, font_file_path):
 
 
 def clamp_title_text(title, width):
-    im = Image.new('RGBA', (500, 500), "white")
+    im = Image.new('RGBA', (500 * SCALE_FACTOR, 500 * SCALE_FACTOR), "white")
     dr = ImageDraw.Draw(im)
 
     font_path_italic = os.path.abspath(os.path.join(os.path.dirname(__file__), 'fonts', 'Garamond Light.ttf'))
-    start_font_size, end_font_size = 80, 61
+    start_font_size, end_font_size = 80 * SCALE_FACTOR, 61 * SCALE_FACTOR
 
     for font_size in range(start_font_size, end_font_size, -1):
         font = ImageFont.truetype(font_path_italic, font_size)
@@ -158,7 +149,7 @@ def clamp_title_text(title, width):
         if w < width:
             return font, title
 
-    start_font_size, end_font_size = 80, 34
+    start_font_size, end_font_size = 80 * SCALE_FACTOR, 34 * SCALE_FACTOR
     for font_size in range(start_font_size, end_font_size, -1):
         font = ImageFont.truetype(font_path_italic, font_size)
         for match in re.finditer(r'\s', title):
