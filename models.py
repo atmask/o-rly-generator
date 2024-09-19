@@ -92,10 +92,22 @@ def draw_author(draw, text, width, height, font):
 
 def generate_image(title, top_text, author, image_code, theme, guide_text_placement, guide_text):
     theme_colors = {
-        "0": (85, 19, 93, 255), "1": (113, 112, 110, 255), "2": (128, 27, 42, 255), "3": (184, 7, 33, 255),
-        "4": (101, 22, 28, 255), "5": (80, 61, 189, 255), "6": (225, 17, 5, 255), "7": (6, 123, 176, 255),
-        "8": (247, 181, 0, 255), "9": (0, 15, 118, 255), "10": (168, 0, 155, 255), "11": (0, 132, 69, 255),
-        "12": (0, 153, 157, 255), "13": (1, 66, 132, 255), "14": (177, 0, 52, 255), "15": (55, 142, 25, 255),
+        "0": (85, 19, 93, 255),
+        "1": (113, 112, 110, 255),
+        "2": (128, 27, 42, 255),
+        "3": (184, 7, 33, 255),
+        "4": (101, 22, 28, 255),
+        "5": (80, 61, 189, 255),
+        "6": (225, 17, 5, 255),
+        "7": (6, 123, 176, 255),
+        "8": (247, 181, 0, 255),
+        "9": (0, 15, 118, 255),
+        "10": (168, 0, 155, 255),
+        "11": (0, 132, 69, 255),
+        "12": (0, 153, 157, 255),
+        "13": (1, 66, 132, 255),
+        "14": (177, 0, 52, 255),
+        "15": (55, 142, 25, 255),
         "16": (133, 152, 0, 255)
     }
     theme_color = theme_colors.get(theme, (255, 255, 255, 255))
@@ -116,8 +128,7 @@ def generate_image(title, top_text, author, image_code, theme, guide_text_placem
 
     animal_image_path = os.path.join(base_dir, 'images', f'{image_code}.png')
     animal_image = Image.open(animal_image_path).convert('RGBA')
-    animal_image = animal_image.resize(
-        ((animal_image.width - 5) * SCALE_FACTOR, (animal_image.height - 5) * SCALE_FACTOR))
+    animal_image = animal_image.resize(((400 - 5) * SCALE_FACTOR, (400 - 5) * SCALE_FACTOR))
     im.paste(animal_image, (80 * SCALE_FACTOR, 40 * SCALE_FACTOR), animal_image)
 
     final_path = os.path.abspath(os.path.join(os.path.dirname(__file__), f'{datetime.datetime.now()}.jpeg'))
