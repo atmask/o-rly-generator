@@ -6,6 +6,6 @@ GET http://127.0.0.1:5000/generate
     &image_code=41
     &theme=17
     &guide_text_placement=bottom_right
-    &guide_text=Ah shit, here we go again.
+    &guide_text=Ah shit, here we go again
 
 ###
