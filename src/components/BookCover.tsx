@@ -42,34 +42,39 @@ const BookCover = ({
     setTitleBlockHeight(totalHeight);
   }, [title]);
 
-  // Calculate subtitle position based on title block height
+  // Calculate positions
   const titleBlockTop = 400; // Initial top position of the title block
   const titleBlockPadding = 25; // Top and bottom padding
-  const subtitleTop = titleBlockTop + titleBlockHeight + titleBlockPadding * 2;
+  const subtitleBottomTop =
+    titleBlockTop + titleBlockHeight + titleBlockPadding * 2;
 
   // Subtitle positioning based on guideTextPlacement
   const subtitleStyle: React.CSSProperties = {
     position: "absolute",
-    top: `${subtitleTop}px`,
     fontFamily: "Garamond Light Italic",
     fontSize: "34px",
     color: "black",
     lineHeight: "1",
+    zIndex: "2",
   };
 
   switch (guideTextPlacement) {
     case "top_left":
+      subtitleStyle.top = "365px";
       subtitleStyle.left = "20px";
       break;
     case "top_right":
+      subtitleStyle.top = "365px";
       subtitleStyle.right = "20px";
       subtitleStyle.textAlign = "right";
       break;
     case "bottom_left":
+      subtitleStyle.top = `${subtitleBottomTop}px`;
       subtitleStyle.left = "20px";
       break;
     case "bottom_right":
     default:
+      subtitleStyle.top = `${subtitleBottomTop}px`;
       subtitleStyle.right = "20px";
       subtitleStyle.textAlign = "right";
       break;
