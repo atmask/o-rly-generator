@@ -4,11 +4,17 @@ import html2canvas from "html2canvas";
 
 const CoverEditor = () => {
   // State variables
-  const [title, setTitle] = useState<string>("");
-  const [subtitle, setSubtitle] = useState<string>("");
-  const [author, setAuthor] = useState<string>("");
-  const [color, setColor] = useState<string>("#ffffff");
-  const [animalImage, setAnimalImage] = useState<string>("");
+  const [title, setTitle] = useState<string>("Agile Project Micromanagement");
+  const [subtitle, setSubtitle] = useState<string>("Water-Fall with Stand-ups");
+  const [author, setAuthor] = useState<string>("@denitdao");
+  const [topText, setTopText] = useState<string>(
+    'Cognitive Dissonance as "Process"',
+  );
+  const [guideTextPlacement, setGuideTextPlacement] = useState<
+    "top_left" | "top_right" | "bottom_left" | "bottom_right"
+  >("bottom_right");
+  const [color, setColor] = useState<string>("#b5183e");
+  const [animalImage, setAnimalImage] = useState<string>("2.png");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Function to handle saving the book cover as an image
@@ -16,7 +22,11 @@ const CoverEditor = () => {
     const element = document.getElementById("book-cover");
     if (element) {
       setIsLoading(true);
-      html2canvas(element)
+      html2canvas(element, {
+        width: 500,
+        height: 700,
+        scale: 2, // Increase scale for higher resolution
+      })
         .then((canvas) => {
           const link = document.createElement("a");
           link.download = "orly-book-cover.png";
@@ -34,13 +44,19 @@ const CoverEditor = () => {
 
   // List of animal images
   const animalImages = [
-    { name: "Owl", file: "1.png" },
-    { name: "Fox", file: "2.png" },
+    { name: "Bear", file: "1.png" },
+    { name: "Cat", file: "2.png" },
+    { name: "Wolf", file: "3.png" },
+    { name: "Cow", file: "4.png" },
+    { name: "Horse", file: "5.png" },
+    { name: "Deer", file: "6.png" },
+    { name: "Monkey", file: "7.png" },
+    { name: "Bat", file: "10.png" },
     // Add more animals here
   ];
 
   return (
-    <div className="flex flex-col md:flex-row md:space-x-8">
+    <div className="container flex flex-col items-center p-4 md:flex-row md:space-x-4">
       {/* Left Side: Controls */}
       <div className="md:w-1/2">
         <h1 className="mb-4 text-2xl font-bold">ORLY Book Cover Generator</h1>
@@ -78,6 +94,41 @@ const CoverEditor = () => {
               className="w-full rounded-md border px-3 py-2"
             />
           </div>
+          {/* Top Text Input */}
+          <div>
+            <label className="mb-1 block text-gray-700">Top Text:</label>
+            <input
+              type="text"
+              value={topText}
+              onChange={(e) => setTopText(e.target.value)}
+              placeholder="Enter top text"
+              className="w-full rounded-md border px-3 py-2"
+            />
+          </div>
+          {/* Guide Text Placement Selector */}
+          <div>
+            <label className="mb-1 block text-gray-700">
+              Guide Text Placement:
+            </label>
+            <select
+              value={guideTextPlacement}
+              onChange={(e) =>
+                setGuideTextPlacement(
+                  e.target.value as
+                    | "top_left"
+                    | "top_right"
+                    | "bottom_left"
+                    | "bottom_right",
+                )
+              }
+              className="w-full rounded-md border px-3 py-2"
+            >
+              <option value="top_left">Top Left</option>
+              <option value="top_right">Top Right</option>
+              <option value="bottom_left">Bottom Left</option>
+              <option value="bottom_right">Bottom Right</option>
+            </select>
+          </div>
           {/* Color Picker */}
           <div>
             <label className="mb-1 block text-gray-700">Color:</label>
@@ -96,7 +147,7 @@ const CoverEditor = () => {
               onChange={(e) => setAnimalImage(e.target.value)}
               className="w-full rounded-md border px-3 py-2"
             >
-              <option value="">Select an animal</option>
+              <option value={animalImage}>Select an animal</option>
               {animalImages.map((animal) => (
                 <option key={animal.file} value={animal.file}>
                   {animal.name}
@@ -121,13 +172,24 @@ const CoverEditor = () => {
 
       {/* Right Side: Book Cover Preview */}
       <div className="mt-8 flex items-start justify-center md:mt-0 md:w-1/2">
-        <BookCover
-          title={title}
-          subtitle={subtitle}
-          author={author}
-          color={color}
-          animalImage={animalImage}
-        />
+        <div
+          style={{
+            width: "500px",
+            height: "700px",
+            position: "relative",
+            border: "1px solid #ccc",
+          }}
+        >
+          <BookCover
+            title={title}
+            subtitle={subtitle}
+            author={author}
+            color={color}
+            animalImage={animalImage}
+            topText={topText}
+            guideTextPlacement={guideTextPlacement}
+          />
+        </div>
       </div>
     </div>
   );

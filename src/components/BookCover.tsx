@@ -1,11 +1,13 @@
 import React from "react";
 
-interface BookCoverProps {
+export interface BookCoverProps {
   title: string;
   subtitle: string;
   author: string;
   color: string;
   animalImage: string;
+  topText: string;
+  guideTextPlacement: "top_left" | "top_right" | "bottom_left" | "bottom_right";
 }
 
 const BookCover = ({
@@ -14,36 +16,185 @@ const BookCover = ({
   author,
   color,
   animalImage,
+  topText,
+  guideTextPlacement,
 }: BookCoverProps) => {
+  // Subtitle positioning based on guideTextPlacement
+  let subtitleStyle: React.CSSProperties = {};
+
+  switch (guideTextPlacement) {
+    case "top_left":
+      subtitleStyle = {
+        position: "absolute",
+        top: "370px",
+        left: "20px",
+        fontFamily: "Garamond Light Italic",
+        fontSize: "34px",
+        color: "black",
+      };
+      break;
+    case "top_right":
+      subtitleStyle = {
+        position: "absolute",
+        top: "370px",
+        right: "20px",
+        fontFamily: "Garamond Light Italic",
+        fontSize: "34px",
+        color: "black",
+        textAlign: "right",
+      };
+      break;
+    case "bottom_left":
+      subtitleStyle = {
+        position: "absolute",
+        top: "520px",
+        left: "20px",
+        fontFamily: "Garamond Light Italic",
+        fontSize: "34px",
+        color: "black",
+      };
+      break;
+    case "bottom_right":
+    default:
+      subtitleStyle = {
+        position: "absolute",
+        top: "520px",
+        right: "20px",
+        fontFamily: "Garamond Light Italic",
+        fontSize: "34px",
+        color: "black",
+        textAlign: "right",
+      };
+      break;
+  }
+
   return (
     <div
       id="book-cover"
-      className="relative"
-      style={{ width: "500px", height: "700px", backgroundColor: "#fff" }}
+      style={{
+        position: "relative",
+        width: "500px",
+        height: "700px",
+        backgroundColor: "#fff",
+      }}
     >
-      {/* Color Block */}
+      {/* Top Color Block */}
       <div
-        className="absolute left-0 top-0 h-1/4 w-full"
-        style={{ backgroundColor: color }}
+        style={{
+          position: "absolute",
+          top: "0px",
+          left: "20px",
+          width: "460px",
+          height: "10px",
+          backgroundColor: color,
+        }}
       ></div>
+
+      {/* Top Text */}
+      <div
+        style={{
+          position: "absolute",
+          top: "10px",
+          left: "20px",
+          width: "460px",
+          fontFamily: "Garamond Light Italic",
+          fontSize: "20px",
+          textAlign: "center",
+          lineHeight: "1.1",
+        }}
+      >
+        {topText}
+      </div>
+
       {/* Animal Image */}
       {animalImage && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={`/images/${animalImage}`}
           alt="Animal"
-          className="absolute left-1/2 top-10 z-10 max-h-64 -translate-x-1/2 transform"
+          style={{
+            position: "absolute",
+            top: "40px",
+            left: "80px",
+            width: "395px",
+            height: "395px",
+            zIndex: "1",
+          }}
+          // TODO: make image fit
+          // TODO: allow to move the image slightly
         />
       )}
-      {/* Text Content */}
-      <div className="absolute bottom-20 w-full px-4 text-center">
-        <h1 className="text-3xl font-bold">{title}</h1>
-        <h2 className="mt-2 text-xl text-gray-600">{subtitle}</h2>
-        <p className="mt-4 text-lg text-gray-700">{author}</p>
+
+      {/* Title Block */}
+      <div
+        style={{
+          position: "absolute",
+          top: "400px",
+          left: "20px",
+          width: "460px",
+          backgroundColor: color,
+          paddingTop: "20px",
+          paddingBottom: "20px",
+        }}
+      >
+        <div
+          style={{
+            marginLeft: "20px",
+            marginRight: "20px",
+            color: "white",
+            fontFamily: "Garamond Light",
+            fontSize: "62px",
+            lineHeight: "1",
+          }}
+        >
+          {title}
+        </div>
+        {/* TODO: make title adjustable to the text size*/}
       </div>
-      {/* ORLY Logo */}
-      <div className="absolute bottom-4 right-4 font-semibold text-gray-500">
-        O RLY?
+
+      {/* Subtitle */}
+      <div style={subtitleStyle}>{subtitle}</div>
+
+      {/* O RLY Logo */}
+      <div
+        style={{
+          position: "absolute",
+          left: "20px",
+          bottom: "20px",
+          fontFamily: "Helvetica Neue Medium",
+          fontSize: "28px",
+          lineHeight: "1",
+        }}
+      >
+        O RLY
+        <span
+          style={{
+            position: "relative",
+            bottom: "15px",
+            right: "0px",
+            fontFamily: "Helvetica Bold",
+            fontSize: "16px",
+            color: color,
+            lineHeight: "1",
+          }}
+        >
+          ?
+        </span>
+      </div>
+
+      {/* Author */}
+      <div
+        style={{
+          position: "absolute",
+          right: "20px",
+          bottom: "20px",
+          fontFamily: "Garamond Light Italic",
+          fontSize: "24px",
+          textAlign: "right",
+          lineHeight: "1",
+        }}
+      >
+        {author}
       </div>
     </div>
   );

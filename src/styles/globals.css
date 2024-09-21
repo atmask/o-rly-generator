@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'Garamond Light';
+  src: url('/fonts/Garamond-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Garamond Light Italic';
+  src: url('/fonts/Garamond-Light-Italic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Helvetica Neue Medium';
+  src: url('/fonts/Helvetica-Neue-Medium.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Helvetica Bold';
+  src: url('/fonts/Helvetica-Bold.ttf') format('truetype');
+}
