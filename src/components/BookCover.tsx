@@ -126,7 +126,7 @@ const BookCover = ({
       const minX = 0;
       const minY = 0;
       const maxX = 500 - 395; // cover width - image width
-      const maxY = 500 - 395; // cover height - image height
+      const maxY = 600 - 395; // cover height - image height
 
       setImagePosition({
         x: Math.max(minX, Math.min(newX, maxX)),
@@ -139,6 +139,47 @@ const BookCover = ({
     setIsDragging(false);
   };
 
+  // Touch event handlers for dragging
+  const handleTouchStart = (e: React.TouchEvent<HTMLImageElement>) => {
+    setIsDragging(true);
+    const touch = e.touches[0];
+    if (!touch) {
+      setIsDragging(false);
+      return;
+    }
+    setDragStart({
+      x: touch.clientX - imagePosition.x,
+      y: touch.clientY - imagePosition.y,
+    });
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (isDragging) {
+      const touch = e.touches[0];
+      if (!touch) {
+        setIsDragging(false);
+        return;
+      }
+      const newX = touch.clientX - dragStart.x;
+      const newY = touch.clientY - dragStart.y;
+
+      // Constrain the image within the book cover boundaries
+      const minX = 0;
+      const minY = 0;
+      const maxX = 500 - 395; // cover width - image width
+      const maxY = 600 - 395; // cover height - image height
+
+      setImagePosition({
+        x: Math.max(minX, Math.min(newX, maxX)),
+        y: Math.max(minY, Math.min(newY, maxY)),
+      });
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
+
   return (
     <div
       id="book-cover"
@@ -148,10 +189,14 @@ const BookCover = ({
         height: "700px",
         backgroundColor: "#fff",
         userSelect: "none",
+        touchAction: "none", // Prevent default touch actions
       }}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
     >
       {/* Hidden canvas for text measurement */}
       <canvas ref={canvasRef} style={{ display: "none" }} />
@@ -201,8 +246,10 @@ const BookCover = ({
             zIndex: 1,
             cursor: "move",
             objectFit: "contain",
+            touchAction: "none", // Prevent default touch actions
           }}
           onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
         />
       )}
 
