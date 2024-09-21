@@ -12,8 +12,8 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="min-h-screen min-w-[540px] bg-gradient-to-b from-[#cfd9df] to-[#e2ebf0]">
-        <div className="container mx-auto p-4">
+      <div className="min-h-screen min-w-[540px] bg-gradient-to-b from-[#cfd9df] to-[#e2ebf0]">
+        <main className="container mx-auto p-4">
           {/* Main Content */}
           <CoverEditor />
 
@@ -49,8 +49,8 @@ export default function Home() {
               </a>
             </p>
           </footer>
-        </div>
-      </main>
+        </main>
+      </div>
     </>
   );
 }
