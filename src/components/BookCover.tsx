@@ -1,4 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import localFont from "next/font/local";
+
+const garamondLight = localFont({
+  src: "/../../public/fonts/Garamond-Light.ttf",
+});
+const garamondLightItalic = localFont({
+  src: "/../../public/fonts/Garamond-Light-Italic.ttf",
+});
+const helveticaBold = localFont({
+  src: "/../../public/fonts/Helvetica-Bold.ttf",
+});
+const helveticaNeueMedium = localFont({
+  src: "/../../public/fonts/Helvetica-Neue-Medium.otf",
+});
 
 export interface BookCoverProps {
   title: string;
@@ -62,7 +77,7 @@ const BookCover = ({
   // Subtitle positioning based on guideTextPlacement
   const subtitleStyle: React.CSSProperties = {
     position: "absolute",
-    fontFamily: "Garamond Light Italic",
+    fontFamily: garamondLightItalic.style.fontFamily,
     fontSize: "34px",
     color: "black",
     lineHeight: "1",
@@ -160,7 +175,7 @@ const BookCover = ({
           top: "10px",
           left: "20px",
           width: "460px",
-          fontFamily: "Garamond Light Italic",
+          fontFamily: garamondLightItalic.style.fontFamily,
           fontSize: "20px",
           textAlign: "center",
           lineHeight: "1.1",
@@ -172,9 +187,11 @@ const BookCover = ({
       {/* Animal Image */}
       {animalImage && (
         // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={`/images/${animalImage}`}
           alt="Animal"
+          height={395}
+          width={395}
           style={{
             position: "absolute",
             top: `${imagePosition.y}px`,
@@ -207,7 +224,7 @@ const BookCover = ({
             paddingTop: "25px",
             paddingBottom: "25px",
             color: "white",
-            fontFamily: "Garamond Light",
+            fontFamily: garamondLight.style.fontFamily,
             fontSize: `${titleFontSize}px`,
             lineHeight: "0.9",
             whiteSpace: "pre-wrap",
@@ -227,7 +244,7 @@ const BookCover = ({
           position: "absolute",
           left: "20px",
           bottom: "20px",
-          fontFamily: "Helvetica Neue Medium",
+          fontFamily: helveticaNeueMedium.style.fontFamily,
           fontSize: "28px",
           lineHeight: "1",
         }}
@@ -238,7 +255,7 @@ const BookCover = ({
             position: "relative",
             bottom: "15px",
             right: "0px",
-            fontFamily: "Helvetica Bold",
+            fontFamily: helveticaBold.style.fontFamily,
             fontSize: "16px",
             color: color,
             lineHeight: "1",
@@ -254,7 +271,7 @@ const BookCover = ({
           position: "absolute",
           right: "20px",
           bottom: "20px",
-          fontFamily: "Garamond Light Italic",
+          fontFamily: garamondLightItalic.style.fontFamily,
           fontSize: "24px",
           textAlign: "right",
           lineHeight: "1",
@@ -277,7 +294,7 @@ const adjustTitle = (
   const LINE_HEIGHT_MULTIPLIER = 0.9; // Line height multiplier
   const MAX_WIDTH = 460 - 40; // Title block width minus margins (20px on each side)
 
-  const fontFamily = "Garamond Light";
+  const fontFamily = garamondLight.style.fontFamily;
   const context = canvas?.getContext("2d");
   if (!context)
     return { adjustedTitle: title, fontSize: MIN_FONT_SIZE, totalHeight: 0 };

@@ -8,6 +8,9 @@ await import("./src/env.js");
 const config = {
   output: "export",
   reactStrictMode: true,
+  images: {
+    unoptimized: true,
+  },
 
   transpilePackages: ["geist"],
 };
