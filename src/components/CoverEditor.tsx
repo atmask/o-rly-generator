@@ -28,29 +28,48 @@ const CoverEditor = () => {
     { name: "Horse", file: "5.png" },
     { name: "Deer", file: "6.png" },
     { name: "Monkey", file: "7.png" },
+    { name: "Wombat", file: "8.png" },
+    { name: "Platypus", file: "9.png" },
     { name: "Bat", file: "10.png" },
+    { name: "Crested Pelican", file: "11.png" },
+    { name: "Shoebill", file: "12.png" },
+    { name: "Charadrius", file: "13.png" },
+    { name: "Corvus", file: "14.png" },
+    { name: "Ostrich", file: "15.png" },
+    { name: "Chameleon", file: "16.png" },
+    { name: "Frog", file: "17.png" },
+    { name: "Axolotl", file: "18.png" },
+    { name: "Leopard Gecko", file: "19.png" },
+    { name: "Rattle Snake", file: "20.png" },
+    { name: "Sly Silurus", file: "21.png" },
+    { name: "Strange Fish", file: "22.png" },
+    { name: "Dory", file: "23.png" },
+    { name: "Butterfly", file: "26.png" },
+    { name: "Death Head Moth", file: "27.png" },
+
+    { name: "Mushroom", file: "40.png" },
     { name: "Orangutan", file: "41.png" },
     { name: "Bornean Orangutan", file: "42.png" },
     { name: "Goat", file: "69.png" },
-    // Add more animals here
+    // TODO: Add more animals here
   ];
 
   // List of predefined colors
   const themeColors = [
     { name: "Gray", value: "#6b7280" },
-    { name: "Red", value: "#ef4444" },
-    { name: "Orange", value: "#f97316" },
-    { name: "Yellow", value: "#facc15" },
-    { name: "Lime", value: "#84cc16" },
-    { name: "Green", value: "#22c55e" },
-    { name: "Teal", value: "#14b8a6" },
+    { name: "Red", value: "#ff0000" },
+    { name: "Orange", value: "#e66a21" },
+    { name: "Yellow", value: "#f8b824" },
+    { name: "Lime", value: "#8c9d1a" },
+    { name: "Green", value: "#449429" },
+    { name: "Teal", value: "#3a9e9f" },
     { name: "Cyan", value: "#06b6d4" },
     { name: "Sky", value: "#0ea5e9" },
-    { name: "Blue", value: "#3b82f6" },
-    { name: "Indigo", value: "#6366f1" },
-    { name: "Violet", value: "#8b5cf6" },
-    { name: "Fuchsia", value: "#d946ef" },
-    { name: "Pink", value: "#ec4899" },
+    { name: "Blue", value: "#103fa4" },
+    { name: "Indigo", value: "#6167b3" },
+    { name: "Violet", value: "#480d71" },
+    { name: "Fuchsia", value: "#b8459c" },
+    { name: "Pink", value: "#be4b9f" },
   ];
 
   // Handle color selection
@@ -91,7 +110,9 @@ const CoverEditor = () => {
     <div className="container mx-auto flex flex-col p-4 md:flex-row md:space-x-4">
       {/* Left Side: Controls */}
       <div className="w-full md:w-1/2">
-        <h1 className="mb-4 text-2xl font-bold">ORLY Book Cover Generator</h1>
+        <h1 className="mb-4 text-2xl font-bold">
+          O&apos;RLY Book Cover Generator
+        </h1>
         <div className="space-y-2">
           {/* Top Text Input */}
           <div>

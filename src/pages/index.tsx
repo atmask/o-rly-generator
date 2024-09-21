@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Orly Book Cover Generator</title>
+        <title>O&apos;RLY Cover Generator</title>
         <meta
           name="description"
           content="Generate beautiful book covers about your pain"
