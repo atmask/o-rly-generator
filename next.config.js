@@ -4,11 +4,8 @@
  */
 await import("./src/env.js");
 
-const isProd = process.env.NODE_ENV === "production";
-
 /** @type {import("next").NextConfig} */
 const config = {
-  basePath: isProd ? "/o-rly-generator" : "",
   output: "export",
   reactStrictMode: true,
 
