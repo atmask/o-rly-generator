@@ -1,11 +1,10 @@
-# curl --location 'http://127.0.0.1:5000/generate?topText=Learn%2BFlask&author=Jane%2BDoe&image_code=15&theme=2&guide_text_placement=bottom_left&guide_text=Enforcing&title=Useless%20Code%20Metrics%20For%20Dummies'
 GET http://127.0.0.1:5000/generate
-    ?title=Mastering Telegram Bot Integration
-    &topText=Getting user id from the Telegram API
-    &author=@tel_logger_bot
+    ?title=Error - Driven Development
+    &topText=Try, Catch, print("Hello World")
+    &author=u/ashemark2
     &image_code=41
-    &theme=17
+    &theme=6
     &guide_text_placement=bottom_right
-    &guide_text=Ah shit, here we go again
+    &guide_text=The Definitive Guide
 
 ###

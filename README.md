@@ -1,2 +1,5 @@
 # O-RLY-Book-Generator
-Python tool for generating O RLY? Book Covers
+Tools for generating O RLY? Book Covers
+
+
+> The animal images are from the [USF ClipArt ETC](https://etc.usf.edu/clipart/animals/) collection.
