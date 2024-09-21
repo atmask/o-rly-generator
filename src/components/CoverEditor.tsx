@@ -69,7 +69,6 @@ const CoverEditor = () => {
     { name: "Indigo", value: "#6167b3" },
     { name: "Violet", value: "#480d71" },
     { name: "Fuchsia", value: "#b8459c" },
-    { name: "Pink", value: "#be4b9f" },
   ];
 
   // Handle color selection
@@ -86,10 +85,7 @@ const CoverEditor = () => {
       html2canvas(element, {
         width: 500,
         height: 700,
-        scale: 2, // Increase scale for higher resolution
-        logging: true,
-        scrollX: 0,
-        scrollY: 0,
+        scale: 2,
       })
         .then((canvas) => {
           const link = document.createElement("a");
@@ -107,7 +103,7 @@ const CoverEditor = () => {
   };
 
   return (
-    <div className="container mx-auto flex flex-col p-4 md:flex-row md:space-x-4">
+    <div className="flex flex-col md:flex-row md:space-x-4">
       {/* Left Side: Controls */}
       <div className="w-full md:w-1/2">
         <h1 className="mb-4 text-2xl font-bold">
