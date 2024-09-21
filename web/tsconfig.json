@@ -25,6 +25,10 @@
   },
   "include": [
     ".eslintrc.cjs",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.cjs",
+    "**/*.js",
     "src"
   ]
 }
