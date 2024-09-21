@@ -1,10 +1,10 @@
 GET http://127.0.0.1:5000/generate
-    ?title=Error - Driven Development
-    &topText=Try, Catch, print("Hello World")
-    &author=u/ashemark2
-    &image_code=42
+    ?title=Agile Project Micromanagement
+    &topText=Cognitive Dissonance as "Process"
+    &author=@denitdao
+    &image_code=2
     &theme=6
     &guide_text_placement=bottom_right
-    &guide_text=The Definitive Guide
+    &guide_text=Water-Fall with Stand-ups
 
 ###

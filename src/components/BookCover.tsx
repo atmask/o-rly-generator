@@ -19,58 +19,10 @@ const BookCover = ({
   topText,
   guideTextPlacement,
 }: BookCoverProps) => {
-  // Subtitle positioning based on guideTextPlacement
-  let subtitleStyle: React.CSSProperties = {};
-
-  switch (guideTextPlacement) {
-    case "top_left":
-      subtitleStyle = {
-        position: "absolute",
-        top: "370px",
-        left: "20px",
-        fontFamily: "Garamond Light Italic",
-        fontSize: "34px",
-        color: "black",
-      };
-      break;
-    case "top_right":
-      subtitleStyle = {
-        position: "absolute",
-        top: "370px",
-        right: "20px",
-        fontFamily: "Garamond Light Italic",
-        fontSize: "34px",
-        color: "black",
-        textAlign: "right",
-      };
-      break;
-    case "bottom_left":
-      subtitleStyle = {
-        position: "absolute",
-        top: "520px",
-        left: "20px",
-        fontFamily: "Garamond Light Italic",
-        fontSize: "34px",
-        color: "black",
-      };
-      break;
-    case "bottom_right":
-    default:
-      subtitleStyle = {
-        position: "absolute",
-        top: "520px",
-        right: "20px",
-        fontFamily: "Garamond Light Italic",
-        fontSize: "34px",
-        color: "black",
-        textAlign: "right",
-      };
-      break;
-  }
-
-  // State to hold adjusted title and font size
+  // State to hold adjusted title, font size, and title block height
   const [adjustedTitle, setAdjustedTitle] = useState<string>(title);
   const [titleFontSize, setTitleFontSize] = useState<number>(76);
+  const [titleBlockHeight, setTitleBlockHeight] = useState<number>(0);
 
   // Ref for measuring text width
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -81,10 +33,47 @@ const BookCover = ({
       canvasRef.current = document.createElement("canvas");
     }
 
-    const { adjustedTitle, fontSize } = adjustTitle(title, canvasRef.current);
+    const { adjustedTitle, fontSize, totalHeight } = adjustTitle(
+      title,
+      canvasRef.current,
+    );
     setAdjustedTitle(adjustedTitle);
     setTitleFontSize(fontSize);
+    setTitleBlockHeight(totalHeight);
   }, [title]);
+
+  // Calculate subtitle position based on title block height
+  const titleBlockTop = 400; // Initial top position of the title block
+  const titleBlockPadding = 25; // Top and bottom padding
+  const subtitleTop = titleBlockTop + titleBlockHeight + titleBlockPadding * 2;
+
+  // Subtitle positioning based on guideTextPlacement
+  const subtitleStyle: React.CSSProperties = {
+    position: "absolute",
+    top: `${subtitleTop}px`,
+    fontFamily: "Garamond Light Italic",
+    fontSize: "34px",
+    color: "black",
+    lineHeight: "1",
+  };
+
+  switch (guideTextPlacement) {
+    case "top_left":
+      subtitleStyle.left = "20px";
+      break;
+    case "top_right":
+      subtitleStyle.right = "20px";
+      subtitleStyle.textAlign = "right";
+      break;
+    case "bottom_left":
+      subtitleStyle.left = "20px";
+      break;
+    case "bottom_right":
+    default:
+      subtitleStyle.right = "20px";
+      subtitleStyle.textAlign = "right";
+      break;
+  }
 
   return (
     <div
@@ -141,8 +130,6 @@ const BookCover = ({
             height: "395px",
             zIndex: "1",
           }}
-          // TODO: make image fit
-          // TODO: allow to move the image slightly
         />
       )}
 
@@ -150,18 +137,19 @@ const BookCover = ({
       <div
         style={{
           position: "absolute",
-          top: "400px",
+          top: `${titleBlockTop}px`,
           left: "20px",
           width: "460px",
           backgroundColor: color,
-          paddingTop: "25px",
-          paddingBottom: "25px",
         }}
       >
         <div
           style={{
+            margin: "0",
             marginLeft: "20px",
             marginRight: "20px",
+            paddingTop: "25px",
+            paddingBottom: "25px",
             color: "white",
             fontFamily: "Garamond Light",
             fontSize: `${titleFontSize}px`,
@@ -222,24 +210,28 @@ const BookCover = ({
   );
 };
 
-// Extracted adjustTitle function
+// Extracted adjustTitle function with truncation logic
 const adjustTitle = (
   title: string,
   canvas: HTMLCanvasElement | null,
-): { adjustedTitle: string; fontSize: number } => {
+): { adjustedTitle: string; fontSize: number; totalHeight: number } => {
   const MIN_FONT_SIZE = 36; // Minimum font size
   const MAX_FONT_SIZE = 76; // Maximum font size
   const MAX_TITLE_HEIGHT = 115; // Maximum title block height in pixels
-  const LINE_HEIGHT = 0.9; // Line height multiplier
+  const LINE_HEIGHT_MULTIPLIER = 0.9; // Line height multiplier
   const MAX_WIDTH = 460 - 40; // Title block width minus margins (20px on each side)
 
   const fontFamily = "Garamond Light";
   const context = canvas?.getContext("2d");
-  if (!context) return { adjustedTitle: title, fontSize: MIN_FONT_SIZE };
+  if (!context)
+    return { adjustedTitle: title, fontSize: MIN_FONT_SIZE, totalHeight: 0 };
 
   const words = title.split(" ");
   let optimalFontSize = MIN_FONT_SIZE;
   let optimalTitle = title;
+  let optimalHeight = 0;
+
+  let truncated = false;
 
   // Iterate from maximum to minimum font size
   for (let fontSize = MAX_FONT_SIZE; fontSize >= MIN_FONT_SIZE; fontSize--) {
@@ -252,7 +244,7 @@ const adjustTitle = (
       const lines = lineCombo.split("\n");
 
       // Check if total height exceeds maximum allowed
-      const totalHeight = lines.length * fontSize * LINE_HEIGHT;
+      const totalHeight = lines.length * fontSize * LINE_HEIGHT_MULTIPLIER;
       if (totalHeight > MAX_TITLE_HEIGHT) {
         continue; // Skip this combination
       }
@@ -265,18 +257,52 @@ const adjustTitle = (
         // Found a combination that fits
         optimalFontSize = fontSize;
         optimalTitle = lineCombo;
+        optimalHeight = totalHeight;
+        truncated = false;
         // Since we're iterating from largest font size, we can break early
         break;
       }
     }
 
-    if (optimalFontSize === fontSize) {
+    if (optimalHeight > 0) {
       // Optimal font size found, no need to check smaller sizes
       break;
     }
   }
 
-  return { adjustedTitle: optimalTitle, fontSize: optimalFontSize };
+  // If no fitting combination found, truncate the title
+  if (optimalHeight === 0) {
+    truncated = true;
+    optimalFontSize = MIN_FONT_SIZE;
+    context.font = `${optimalFontSize}px ${fontFamily}`;
+
+    let truncatedTitle = title;
+    while (true) {
+      // Remove last word
+      truncatedTitle = truncatedTitle.substring(
+        0,
+        truncatedTitle.lastIndexOf(" "),
+      );
+      if (!truncatedTitle) {
+        truncatedTitle = title.substring(0, 10); // Fallback to first 10 characters
+        break;
+      }
+      const testTitle = truncatedTitle + "...";
+      const textWidth = context.measureText(testTitle).width;
+      const totalHeight = optimalFontSize * LINE_HEIGHT_MULTIPLIER;
+      if (textWidth <= MAX_WIDTH && totalHeight <= MAX_TITLE_HEIGHT) {
+        optimalTitle = testTitle;
+        optimalHeight = totalHeight;
+        break;
+      }
+    }
+  }
+
+  return {
+    adjustedTitle: optimalTitle,
+    fontSize: optimalFontSize,
+    totalHeight: optimalHeight,
+  };
 };
 
 // Function to generate all possible line break combinations

@@ -12,7 +12,7 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="min-h-screen bg-gradient-to-b from-[#cfd9df] to-[#e2ebf0]">
+      <main className="min-h-screen min-w-[540px] bg-gradient-to-b from-[#cfd9df] to-[#e2ebf0]">
         <CoverEditor />
       </main>
     </>
