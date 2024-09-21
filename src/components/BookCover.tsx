@@ -188,7 +188,7 @@ const BookCover = ({
       {animalImage && (
         // eslint-disable-next-line @next/next/no-img-element
         <Image
-          src={`/images/${animalImage}`}
+          src={`./images/${animalImage}`}
           alt="Animal"
           height={395}
           width={395}
