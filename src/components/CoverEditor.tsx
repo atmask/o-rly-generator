@@ -29,6 +29,8 @@ const CoverEditor = () => {
     { name: "Deer", file: "6.png" },
     { name: "Monkey", file: "7.png" },
     { name: "Bat", file: "10.png" },
+    { name: "Orangutan", file: "41.png" },
+    { name: "Bornean Orangutan", file: "42.png" },
     { name: "Goat", file: "69.png" },
     // Add more animals here
   ];
