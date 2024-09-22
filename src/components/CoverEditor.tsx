@@ -162,7 +162,7 @@ const CoverEditor = () => {
             />
           </div>
           <div>
-            <Label htmlFor="guide-text-placement">Guide Text Placement:</Label>
+            <Label htmlFor="guide-text-placement">Subtitle Placement:</Label>
             <ToggleGroup
               id="guide-text-placement"
               size={"sm"}
@@ -244,13 +244,15 @@ const CoverEditor = () => {
               label="Animal"
             />
           </div>
-          <Button
-            onClick={handleSave}
-            disabled={!title || !animalImage || isLoading}
-            className="mt-8 w-full rounded-md py-2 font-semibold text-white"
-          >
-            {isLoading ? "Processing..." : "Save Cover"}
-          </Button>
+          <div className="pt-4">
+            <Button
+              onClick={handleSave}
+              disabled={!title || !animalImage || isLoading}
+              className="w-full"
+            >
+              {isLoading ? "Processing..." : "Save Cover"}
+            </Button>
+          </div>
         </div>
       </div>
 
