@@ -40,7 +40,9 @@ export default function ColorPicker({
             ) : (
               <Paintbrush className="h-4 w-4" />
             )}
-            <div className="flex-1 truncate">{color || "Pick a color"}</div>
+            <div className="flex-1 truncate">
+              {color ? color : "Pick a color"}
+            </div>
           </div>
         </Button>
       </PopoverTrigger>
