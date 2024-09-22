@@ -109,7 +109,7 @@ const CoverEditor = () => {
   return (
     <div className="flex flex-col md:flex-row md:space-x-4">
       <div className="w-full md:w-1/2">
-        <h1 className="mb-4 text-2xl font-bold">
+        <h1 className="mb-8 text-3xl font-extrabold tracking-tight">
           O&apos;RLY Book Cover Generator
         </h1>
         <div className="space-y-4">
