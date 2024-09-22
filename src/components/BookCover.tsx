@@ -3,16 +3,16 @@ import Image from "next/image";
 import localFont from "next/font/local";
 
 const garamondLight = localFont({
-  src: "/../../public/fonts/Garamond-Light.ttf",
+  src: "./fonts/Garamond-Light.ttf",
 });
 const garamondLightItalic = localFont({
-  src: "/../../public/fonts/Garamond-Light-Italic.ttf",
+  src: "./fonts/Garamond-Light-Italic.ttf",
 });
 const helveticaBold = localFont({
-  src: "/../../public/fonts/Helvetica-Bold.ttf",
+  src: "./fonts/Helvetica-Bold.ttf",
 });
 const helveticaNeueMedium = localFont({
-  src: "/../../public/fonts/Helvetica-Neue-Medium.otf",
+  src: "./fonts/Helvetica-Neue-Medium.otf",
 });
 
 export interface BookCoverProps {
