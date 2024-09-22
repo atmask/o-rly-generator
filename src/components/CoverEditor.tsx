@@ -1,6 +1,17 @@
 import React, { useState } from "react";
 import BookCover from "./BookCover";
 import html2canvas from "html2canvas";
+import { Label } from "~/components/ui/label";
+import { Input } from "~/components/ui/input";
+import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
+import {
+  SquareArrowDownLeft,
+  SquareArrowDownRight,
+  SquareArrowUpLeft,
+  SquareArrowUpRight,
+} from "lucide-react";
+import ItemsSelect from "~/components/ItemsSelect";
+import { Button } from "~/components/ui/button";
 
 const CoverEditor = () => {
   // State variables
@@ -21,36 +32,36 @@ const CoverEditor = () => {
 
   // List of animal images
   const animalImages = [
-    { name: "Bear", file: "1.png" },
-    { name: "Cat", file: "2.png" },
-    { name: "Wolf", file: "3.png" },
-    { name: "Cow", file: "4.png" },
-    { name: "Horse", file: "5.png" },
-    { name: "Deer", file: "6.png" },
-    { name: "Monkey", file: "7.png" },
-    { name: "Wombat", file: "8.png" },
-    { name: "Platypus", file: "9.png" },
-    { name: "Bat", file: "10.png" },
-    { name: "Crested Pelican", file: "11.png" },
-    { name: "Shoebill", file: "12.png" },
-    { name: "Charadrius", file: "13.png" },
-    { name: "Corvus", file: "14.png" },
-    { name: "Ostrich", file: "15.png" },
-    { name: "Chameleon", file: "16.png" },
-    { name: "Frog", file: "17.png" },
-    { name: "Axolotl", file: "18.png" },
-    { name: "Leopard Gecko", file: "19.png" },
-    { name: "Rattle Snake", file: "20.png" },
-    { name: "Sly Silurus", file: "21.png" },
-    { name: "Strange Fish", file: "22.png" },
-    { name: "Dory", file: "23.png" },
-    { name: "Butterfly", file: "26.png" },
-    { name: "Death Head Moth", file: "27.png" },
+    { label: "Bear", value: "1.png" },
+    { label: "Cat", value: "2.png" },
+    { label: "Wolf", value: "3.png" },
+    { label: "Cow", value: "4.png" },
+    { label: "Horse", value: "5.png" },
+    { label: "Deer", value: "6.png" },
+    { label: "Monkey", value: "7.png" },
+    { label: "Wombat", value: "8.png" },
+    { label: "Platypus", value: "9.png" },
+    { label: "Bat", value: "10.png" },
+    { label: "Crested Pelican", value: "11.png" },
+    { label: "Shoebill", value: "12.png" },
+    { label: "Charadrius", value: "13.png" },
+    { label: "Corvus", value: "14.png" },
+    { label: "Ostrich", value: "15.png" },
+    { label: "Chameleon", value: "16.png" },
+    { label: "Frog", value: "17.png" },
+    { label: "Axolotl", value: "18.png" },
+    { label: "Leopard Gecko", value: "19.png" },
+    { label: "Rattle Snake", value: "20.png" },
+    { label: "Sly Silurus", value: "21.png" },
+    { label: "Strange Fish", value: "22.png" },
+    { label: "Dory", value: "23.png" },
+    { label: "Butterfly", value: "26.png" },
+    { label: "Death Head Moth", value: "27.png" },
 
-    { name: "Mushroom", file: "40.png" },
-    { name: "Orangutan", file: "41.png" },
-    { name: "Bornean Orangutan", file: "42.png" },
-    { name: "Goat", file: "69.png" },
+    { label: "Mushroom", value: "40.png" },
+    { label: "Orangutan", value: "41.png" },
+    { label: "Bornean Orangutan", value: "42.png" },
+    { label: "Goat", value: "69.png" },
     // TODO: Add more animals here
   ];
 
@@ -109,76 +120,81 @@ const CoverEditor = () => {
         <h1 className="mb-4 text-2xl font-bold">
           O&apos;RLY Book Cover Generator
         </h1>
-        <div className="space-y-2">
-          {/* Top Text Input */}
+        <div className="space-y-4">
           <div>
-            <label className="block text-gray-700">Top Text:</label>
-            <input
+            <Label htmlFor="top-text">Top Text:</Label>
+            <Input
               type="text"
+              id="top-text"
+              placeholder="Enter top text"
               value={topText}
               onChange={(e) => setTopText(e.target.value)}
-              placeholder="Enter top text"
-              className="w-full rounded-md border px-3 py-2"
             />
           </div>
-          {/* Title Input */}
           <div>
-            <label className="block text-gray-700">Title:</label>
-            <input
+            <Label htmlFor="title">Title:</Label>
+            <Input
               type="text"
+              id="title"
+              placeholder="Enter book title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter book title"
-              className="w-full rounded-md border px-3 py-2"
             />
           </div>
-          {/* Subtitle Input */}
           <div>
-            <label className="block text-gray-700">Subtitle:</label>
-            <input
+            <Label htmlFor="subtitle">Subtitle:</Label>
+            <Input
               type="text"
+              id="subtitle"
+              placeholder="Enter subtitle"
               value={subtitle}
               onChange={(e) => setSubtitle(e.target.value)}
-              placeholder="Enter subtitle"
-              className="w-full rounded-md border px-3 py-2"
             />
           </div>
-          {/* Author Input */}
           <div>
-            <label className="block text-gray-700">Author:</label>
-            <input
+            <Label htmlFor="author">Author:</Label>
+            <Input
               type="text"
+              id="author"
+              placeholder="Enter author name"
               value={author}
               onChange={(e) => setAuthor(e.target.value)}
-              placeholder="Enter author name"
-              className="w-full rounded-md border px-3 py-2"
             />
           </div>
-          {/* Guide Text Placement Selector */}
           <div>
-            <label className="block text-gray-700">Guide Text Placement:</label>
-            <select
+            <Label htmlFor="guide-text-placement">Guide Text Placement:</Label>
+            <ToggleGroup
+              id="guide-text-placement"
+              size={"sm"}
+              type="single"
               value={guideTextPlacement}
-              onChange={(e) =>
+              onValueChange={(value) =>
                 setGuideTextPlacement(
-                  e.target.value as
+                  value as
                     | "top_left"
                     | "top_right"
                     | "bottom_left"
                     | "bottom_right",
                 )
               }
-              className="w-full rounded-md border px-3 py-2"
+              className="justify-start"
             >
-              <option value="top_left">Top Left</option>
-              <option value="top_right">Top Right</option>
-              <option value="bottom_left">Bottom Left</option>
-              <option value="bottom_right">Bottom Right</option>
-            </select>
+              <ToggleGroupItem value="bottom_left" aria-label="Bottom left">
+                <SquareArrowDownLeft />
+              </ToggleGroupItem>
+              <ToggleGroupItem value="bottom_right" aria-label="Bottom right">
+                <SquareArrowDownRight />
+              </ToggleGroupItem>
+              <ToggleGroupItem value="top_left" aria-label="Top left">
+                <SquareArrowUpLeft />
+              </ToggleGroupItem>
+              <ToggleGroupItem value="top_right" aria-label="Top right">
+                <SquareArrowUpRight />
+              </ToggleGroupItem>
+            </ToggleGroup>
           </div>
-          {/* Color Selector */}
           <div>
-            <label className="block text-gray-700">Color:</label>
+            <Label htmlFor="color">Color:</Label>
             <div className="grid grid-cols-10 gap-2">
               {themeColors.map((colorOption) => (
                 <button
@@ -202,7 +218,6 @@ const CoverEditor = () => {
                 <span className="text-sm">+</span>
               </button>
             </div>
-            {/* Custom Color Picker */}
             {isCustomColor && (
               <div className="mt-2">
                 <label className="block text-gray-700">Custom Color:</label>
@@ -218,34 +233,24 @@ const CoverEditor = () => {
               </div>
             )}
           </div>
-          {/* Animal Image Selector */}
           <div>
-            <label className="block text-gray-700">Animal Image:</label>
-            <select
+            <Label htmlFor="animal-image">Animal Image:</Label>
+            <ItemsSelect
+              id="animal-image"
               value={animalImage}
-              onChange={(e) => setAnimalImage(e.target.value)}
-              className="w-full rounded-md border px-3 py-2"
-            >
-              <option value="">Select an animal</option>
-              {animalImages.map((animal) => (
-                <option key={animal.file} value={animal.file}>
-                  {animal.name}
-                </option>
-              ))}
-            </select>
+              onValueChange={(value) => setAnimalImage(value)}
+              items={animalImages}
+              placeholder="Select an animal"
+              label="Animal"
+            />
           </div>
-          {/* Save Button */}
-          <button
+          <Button
             onClick={handleSave}
             disabled={!title || !animalImage || isLoading}
-            className={`mt-8 w-full rounded-md py-2 font-semibold text-white ${
-              !title || !animalImage || isLoading
-                ? "cursor-not-allowed bg-gray-400"
-                : "bg-blue-500 hover:bg-blue-600"
-            }`}
+            className="mt-8 w-full rounded-md py-2 font-semibold text-white"
           >
             {isLoading ? "Processing..." : "Save Cover"}
-          </button>
+          </Button>
         </div>
       </div>
 
