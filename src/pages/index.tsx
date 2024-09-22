@@ -34,7 +34,7 @@ export default function Home() {
               {" | "}
               Explore full book collection on{" "}
               <a
-                href="https://orlybooks.com/?sort=color"
+                href="https://orlybooks.com"
                 target="_blank"
                 className="text-blue-500 underline hover:text-blue-700"
               >
