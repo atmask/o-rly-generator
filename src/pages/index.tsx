@@ -1,17 +1,10 @@
-import Head from "next/head";
 import CoverEditor from "~/components/CoverEditor";
+import OrlyHead from "~/components/meta/OrlyHead";
 
 export default function Home() {
   return (
     <>
-      <Head>
-        <title>O&apos;RLY Cover Generator</title>
-        <meta
-          name="description"
-          content="Generate beautiful book covers about your pain"
-        />
-        <link rel="icon" href="./favicon.ico" />
-      </Head>
+      <OrlyHead />
       <div className="min-h-screen min-w-[540px] bg-gradient-to-b from-[#cfd9df] to-[#e2ebf0]">
         <main className="container mx-auto p-4">
           {/* Main Content */}
