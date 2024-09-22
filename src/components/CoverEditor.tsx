@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import ItemsSelect from "~/components/ItemsSelect";
 import { Button } from "~/components/ui/button";
+import ColorPicker from "~/components/ColorPicker";
 
 const CoverEditor = () => {
   // State variables
@@ -21,12 +22,10 @@ const CoverEditor = () => {
   const [title, setTitle] = useState<string>("Winning Arguments");
   const [subtitle, setSubtitle] = useState<string>("Pocket Reference");
   const [author, setAuthor] = useState<string>("@denitdao");
-  const [guideTextPlacement, setGuideTextPlacement] = useState<
+  const [subtitlePlacement, setSubtitlePlacement] = useState<
     "top_left" | "top_right" | "bottom_left" | "bottom_right"
   >("bottom_right");
   const [color, setColor] = useState<string>("#0a79b5");
-  const [customColor, setCustomColor] = useState<string>("#000000");
-  const [isCustomColor, setIsCustomColor] = useState<boolean>(false);
   const [animalImage, setAnimalImage] = useState<string>("69.png");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -82,12 +81,6 @@ const CoverEditor = () => {
     { name: "Fuchsia", value: "#b8459c" },
   ];
 
-  // Handle color selection
-  const handleColorSelect = (selectedColor: string, isCustom = false) => {
-    setColor(selectedColor);
-    setIsCustomColor(isCustom);
-  };
-
   // Function to handle saving the book cover as an image
   const handleSave = () => {
     const element = document.getElementById("book-cover");
@@ -115,7 +108,6 @@ const CoverEditor = () => {
 
   return (
     <div className="flex flex-col md:flex-row md:space-x-4">
-      {/* Left Side: Controls */}
       <div className="w-full md:w-1/2">
         <h1 className="mb-4 text-2xl font-bold">
           O&apos;RLY Book Cover Generator
@@ -167,9 +159,9 @@ const CoverEditor = () => {
               id="guide-text-placement"
               size={"sm"}
               type="single"
-              value={guideTextPlacement}
+              value={subtitlePlacement}
               onValueChange={(value) =>
-                setGuideTextPlacement(
+                setSubtitlePlacement(
                   value as
                     | "top_left"
                     | "top_right"
@@ -195,43 +187,12 @@ const CoverEditor = () => {
           </div>
           <div>
             <Label htmlFor="color">Color:</Label>
-            <div className="grid grid-cols-10 gap-2">
-              {themeColors.map((colorOption) => (
-                <button
-                  key={colorOption.value}
-                  onClick={() => handleColorSelect(colorOption.value)}
-                  style={{ backgroundColor: colorOption.value }}
-                  className={`h-8 w-8 rounded ${
-                    color === colorOption.value && !isCustomColor
-                      ? "ring-2 ring-blue-500 ring-offset-2"
-                      : ""
-                  }`}
-                ></button>
-              ))}
-              {/* Custom Color Button */}
-              <button
-                onClick={() => handleColorSelect(customColor, true)}
-                className={`h-8 w-8 rounded border ${
-                  isCustomColor ? "ring-2 ring-blue-500 ring-offset-2" : ""
-                } flex items-center justify-center`}
-              >
-                <span className="text-sm">+</span>
-              </button>
-            </div>
-            {isCustomColor && (
-              <div className="mt-2">
-                <label className="block text-gray-700">Custom Color:</label>
-                <input
-                  type="color"
-                  value={customColor}
-                  onChange={(e) => {
-                    setCustomColor(e.target.value);
-                    setColor(e.target.value);
-                  }}
-                  className="h-10 w-full"
-                />
-              </div>
-            )}
+            <ColorPicker
+              colors={themeColors.map((c) => c.value)}
+              color={color}
+              setColor={(color) => setColor(color)}
+              className="block"
+            />
           </div>
           <div>
             <Label htmlFor="animal-image">Animal Image:</Label>
@@ -256,7 +217,6 @@ const CoverEditor = () => {
         </div>
       </div>
 
-      {/* Right Side: Book Cover Preview */}
       <div className="mt-8 flex w-full items-start justify-center md:mt-0 md:w-1/2">
         <div
           style={{
@@ -267,13 +227,13 @@ const CoverEditor = () => {
           }}
         >
           <BookCover
+            topText={topText}
             title={title}
             subtitle={subtitle}
             author={author}
             color={color}
             animalImage={animalImage}
-            topText={topText}
-            guideTextPlacement={guideTextPlacement}
+            subtitlePlacement={subtitlePlacement}
           />
         </div>
       </div>

@@ -16,23 +16,23 @@ const helveticaNeueMedium = localFont({
 });
 
 export interface BookCoverProps {
+  topText: string;
   title: string;
   subtitle: string;
   author: string;
   color: string;
   animalImage: string;
-  topText: string;
-  guideTextPlacement: "top_left" | "top_right" | "bottom_left" | "bottom_right";
+  subtitlePlacement: "top_left" | "top_right" | "bottom_left" | "bottom_right";
 }
 
 const BookCover = ({
+  topText,
   title,
   subtitle,
   author,
   color,
   animalImage,
-  topText,
-  guideTextPlacement,
+  subtitlePlacement,
 }: BookCoverProps) => {
   // State to hold adjusted title, font size, and title block height
   const [adjustedTitle, setAdjustedTitle] = useState<string>(title);
@@ -84,7 +84,7 @@ const BookCover = ({
     zIndex: 2,
   };
 
-  switch (guideTextPlacement) {
+  switch (subtitlePlacement) {
     case "top_left":
       subtitleStyle.top = "365px";
       subtitleStyle.left = "20px";

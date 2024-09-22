@@ -37,7 +37,7 @@ export default function ItemsSelect({
 }: ItemsSelectProps) {
   return (
     <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger id={id} className={cn(className, "w-[180px]")}>
+      <SelectTrigger id={id} className={cn(className, "w-[220px]")}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent
