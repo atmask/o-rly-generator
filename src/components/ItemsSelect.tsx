@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { cn } from "~/lib/utils";
-import { GeistSans } from "geist/font/sans";
 
 import {
   Select,
@@ -12,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { GeistMono } from "geist/font/mono";
 
 interface ItemsSelectProps {
   id: string;
@@ -51,12 +51,14 @@ export default function ItemsSelect({
         }}
       >
         <SelectGroup>
-          <SelectLabel className={GeistSans.className}>{label}</SelectLabel>
+          <SelectLabel className={cn(GeistMono.className, "font-extrabold")}>
+            {label}
+          </SelectLabel>
           {items.map((item) => (
             <SelectItem
               key={item.value}
               value={item.value}
-              className={GeistSans.className}
+              className={GeistMono.className}
             >
               {item.label}
             </SelectItem>

@@ -3,7 +3,7 @@ import Link from "next/link";
 const OrlyFooter = () => {
   return (
     <>
-      <footer className="mb-2 mt-auto w-full text-center text-gray-600">
+      <footer className="mb-2 mt-auto w-full text-center font-mono text-gray-600">
         <div>
           <p>
             Open source on{" "}

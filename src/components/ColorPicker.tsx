@@ -8,6 +8,7 @@ import {
 import { cn } from "~/lib/utils";
 import { Paintbrush } from "lucide-react";
 import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 
 export default function ColorPicker({
   colors,
@@ -26,7 +27,7 @@ export default function ColorPicker({
         <Button
           variant={"outline"}
           className={cn(
-            "w-[220px] justify-start text-left",
+            "w-[220px] justify-start text-left font-mono",
             !color && "text-muted-foreground",
             className,
           )}
@@ -61,7 +62,7 @@ export default function ColorPicker({
         <Input
           id="custom"
           value={color}
-          className={cn("col-span-2 mt-4 h-8", GeistSans.className)}
+          className={cn("col-span-2 mt-4 h-8", GeistMono.className)}
           onChange={(e) => setColor(e.currentTarget.value)}
         />
       </PopoverContent>
