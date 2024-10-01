@@ -60,6 +60,7 @@ const CoverEditor = () => {
     { label: "Mushroom", value: "40.png" },
     { label: "Orangutan", value: "41.png" },
     { label: "Bornean Orangutan", value: "42.png" },
+    { label: "AI Something", value: "43.png" },
     { label: "Goat", value: "69.png" },
     // TODO: Add more animals here
   ];
