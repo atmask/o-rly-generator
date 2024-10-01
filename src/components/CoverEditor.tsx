@@ -29,6 +29,7 @@ const CoverEditor = () => {
   const [animalImage, setAnimalImage] = useState<string>("69.png");
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
 
   // List of animal images
   const animalImages = [
@@ -107,6 +108,7 @@ const CoverEditor = () => {
   const handleSave = () => {
     const element = document.getElementById("book-cover");
     if (element) {
+      setIsGeneratingImage(true);
       setIsLoading(true);
       html2canvas(element, {
         width: 500,
@@ -118,12 +120,14 @@ const CoverEditor = () => {
           link.download = "orly-book-cover.png";
           link.href = canvas.toDataURL("image/png");
           link.click();
-          setIsLoading(false);
         })
         .catch((error) => {
           console.error("Error generating image:", error);
-          setIsLoading(false);
           alert("An error occurred while generating the image.");
+        })
+        .finally(() => {
+          setIsLoading(false);
+          setIsGeneratingImage(false);
         });
     }
   };
@@ -271,6 +275,7 @@ const CoverEditor = () => {
             animalImage={animalImage}
             uploadedImage={uploadedImage}
             subtitlePlacement={subtitlePlacement}
+            isGeneratingImage={isGeneratingImage}
           />
         </div>
       </div>

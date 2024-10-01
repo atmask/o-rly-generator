@@ -24,6 +24,7 @@ export interface BookCoverProps {
   animalImage: string;
   uploadedImage: string | null;
   subtitlePlacement: "top_left" | "top_right" | "bottom_left" | "bottom_right";
+  isGeneratingImage: boolean;
 }
 
 const BookCover = ({
@@ -35,6 +36,7 @@ const BookCover = ({
   animalImage,
   uploadedImage,
   subtitlePlacement,
+  isGeneratingImage,
 }: BookCoverProps) => {
   // State to hold adjusted title, font size, and title block height
   const [adjustedTitle, setAdjustedTitle] = useState<string>(title);
@@ -144,8 +146,10 @@ const BookCover = ({
         <DraggableImage
           src={uploadedImage ?? `./images/${animalImage}`}
           alt="Animal"
-          maxDimension={395}
+          baseDimension={395}
+          maxDimension={500}
           style={{ position: "absolute", zIndex: 1 }}
+          isGeneratingImage={isGeneratingImage}
         />
       )}
 
