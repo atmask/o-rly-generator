@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import localFont from "next/font/local";
+import DraggableImage from "./DraggableImage";
 
 const garamondLight = localFont({
   src: "./fonts/Garamond-Light.ttf",
@@ -40,17 +40,6 @@ const BookCover = ({
   const [adjustedTitle, setAdjustedTitle] = useState<string>(title);
   const [titleFontSize, setTitleFontSize] = useState<number>(76);
   const [titleBlockHeight, setTitleBlockHeight] = useState<number>(0);
-
-  // State for dragging the animal image
-  const [imagePosition, setImagePosition] = useState<{ x: number; y: number }>({
-    x: 80,
-    y: 40,
-  });
-  const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [dragStart, setDragStart] = useState<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
-  });
 
   // Ref for measuring text width
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -108,80 +97,6 @@ const BookCover = ({
       break;
   }
 
-  // Event handlers for dragging the animal image
-  const handleMouseDown = (e: React.MouseEvent<HTMLImageElement>) => {
-    e.preventDefault();
-    setIsDragging(true);
-    setDragStart({
-      x: e.clientX - imagePosition.x,
-      y: e.clientY - imagePosition.y,
-    });
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isDragging) {
-      e.preventDefault();
-      const newX = e.clientX - dragStart.x;
-      const newY = e.clientY - dragStart.y;
-
-      // Constrain the image within the book cover boundaries
-      const minX = 0;
-      const minY = 0;
-      const maxX = 500 - 395; // cover width - image width
-      const maxY = 600 - 395; // cover height - image height
-
-      setImagePosition({
-        x: Math.max(minX, Math.min(newX, maxX)),
-        y: Math.max(minY, Math.min(newY, maxY)),
-      });
-    }
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  // Touch event handlers for dragging
-  const handleTouchStart = (e: React.TouchEvent<HTMLImageElement>) => {
-    setIsDragging(true);
-    const touch = e.touches[0];
-    if (!touch) {
-      setIsDragging(false);
-      return;
-    }
-    setDragStart({
-      x: touch.clientX - imagePosition.x,
-      y: touch.clientY - imagePosition.y,
-    });
-  };
-
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (isDragging) {
-      const touch = e.touches[0];
-      if (!touch) {
-        setIsDragging(false);
-        return;
-      }
-      const newX = touch.clientX - dragStart.x;
-      const newY = touch.clientY - dragStart.y;
-
-      // Constrain the image within the book cover boundaries
-      const minX = 0;
-      const minY = 0;
-      const maxX = 500 - 395; // cover width - image width
-      const maxY = 600 - 395; // cover height - image height
-
-      setImagePosition({
-        x: Math.max(minX, Math.min(newX, maxX)),
-        y: Math.max(minY, Math.min(newY, maxY)),
-      });
-    }
-  };
-
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-  };
-
   return (
     <div
       id="book-cover"
@@ -193,12 +108,6 @@ const BookCover = ({
         userSelect: "none",
         touchAction: "none", // Prevent default touch actions
       }}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-      onTouchCancel={handleTouchEnd}
     >
       {/* Hidden canvas for text measurement */}
       <canvas ref={canvasRef} style={{ display: "none" }} />
@@ -232,25 +141,15 @@ const BookCover = ({
         {topText}
       </div>
 
+      {/* Animal Image or Uploaded Image */}
       {(uploadedImage ?? animalImage) && (
-        <Image
+        <DraggableImage
           src={uploadedImage ?? `./images/${animalImage}`}
           alt="Animal"
-          height={395}
-          width={395}
-          style={{
-            position: "absolute",
-            top: `${imagePosition.y}px`,
-            left: `${imagePosition.x}px`,
-            width: "395px",
-            height: "395px",
-            zIndex: 1,
-            cursor: "move",
-            objectFit: "contain",
-            touchAction: "none", // Prevent default touch actions
-          }}
-          onMouseDown={handleMouseDown}
-          onTouchStart={handleTouchStart}
+          maxDimension={395}
+          parentWidth={500}
+          parentHeight={700}
+          style={{ zIndex: 1 }}
         />
       )}
 
@@ -352,8 +251,6 @@ const adjustTitle = (
   let optimalTitle = title;
   let optimalHeight = 0;
 
-  let truncated = false;
-
   // Iterate from maximum to minimum font size
   for (let fontSize = MAX_FONT_SIZE; fontSize >= MIN_FONT_SIZE; fontSize--) {
     context.font = `${fontSize}px ${fontFamily}`;
@@ -379,7 +276,6 @@ const adjustTitle = (
         optimalFontSize = fontSize;
         optimalTitle = lineCombo;
         optimalHeight = totalHeight;
-        truncated = false;
         // Since we're iterating from largest font size, we can break early
         break;
       }
@@ -393,7 +289,6 @@ const adjustTitle = (
 
   // If no fitting combination found, truncate the title
   if (optimalHeight === 0) {
-    truncated = true;
     optimalFontSize = MIN_FONT_SIZE;
     context.font = `${optimalFontSize}px ${fontFamily}`;
 
