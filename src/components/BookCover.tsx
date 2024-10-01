@@ -22,6 +22,7 @@ export interface BookCoverProps {
   author: string;
   color: string;
   animalImage: string;
+  uploadedImage: string | null;
   subtitlePlacement: "top_left" | "top_right" | "bottom_left" | "bottom_right";
 }
 
@@ -32,6 +33,7 @@ const BookCover = ({
   author,
   color,
   animalImage,
+  uploadedImage,
   subtitlePlacement,
 }: BookCoverProps) => {
   // State to hold adjusted title, font size, and title block height
@@ -220,6 +222,7 @@ const BookCover = ({
           top: "10px",
           left: "20px",
           width: "460px",
+          zIndex: 2,
           fontFamily: garamondLightItalic.style.fontFamily,
           fontSize: "20px",
           textAlign: "center",
@@ -229,11 +232,9 @@ const BookCover = ({
         {topText}
       </div>
 
-      {/* Animal Image */}
-      {animalImage && (
-        // eslint-disable-next-line @next/next/no-img-element
+      {(uploadedImage ?? animalImage) && (
         <Image
-          src={`./images/${animalImage}`}
+          src={uploadedImage ?? `./images/${animalImage}`}
           alt="Animal"
           height={395}
           width={395}

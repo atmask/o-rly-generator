@@ -27,6 +27,7 @@ const CoverEditor = () => {
   >("bottom_right");
   const [color, setColor] = useState<string>("#0a79b5");
   const [animalImage, setAnimalImage] = useState<string>("69.png");
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // List of animal images
@@ -81,6 +82,26 @@ const CoverEditor = () => {
     { name: "Violet", value: "#480d71" },
     { name: "Fuchsia", value: "#b8459c" },
   ];
+
+  // Function to handle image upload
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Ensure the file is a PNG image
+      if (file.type !== "image/png") {
+        alert("Please upload a PNG image.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUploadedImage(reader.result as string);
+        // Clear the selected animal image
+        setAnimalImage("");
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   // Function to handle saving the book cover as an image
   const handleSave = () => {
@@ -195,21 +216,35 @@ const CoverEditor = () => {
               className="block"
             />
           </div>
-          <div>
-            <Label htmlFor="animal-image">Animal Image:</Label>
-            <ItemsSelect
-              id="animal-image"
-              value={animalImage}
-              onValueChange={(value) => setAnimalImage(value)}
-              items={animalImages}
-              placeholder="Select an animal"
-              label="Animal"
-            />
+          <div className="flex flex-col gap-4 lg:flex-row">
+            <div>
+              <Label htmlFor="animal-image">Animal Image:</Label>
+              <ItemsSelect
+                id="animal-image"
+                value={animalImage}
+                onValueChange={(value) => {
+                  setAnimalImage(value);
+                  setUploadedImage(null);
+                }}
+                items={animalImages}
+                placeholder="Select an animal"
+                label="Animal"
+              />
+            </div>
+            <div className="w-full">
+              <Label htmlFor="upload-image">Custom Image:</Label>
+              <Input
+                type="file"
+                id="upload-image"
+                accept="image/png"
+                onChange={handleImageUpload}
+              />
+            </div>
           </div>
           <div className="pt-4">
             <Button
               onClick={handleSave}
-              disabled={!title || !animalImage || isLoading}
+              disabled={!title || isLoading}
               className="w-full"
             >
               {isLoading ? "Processing..." : "Save Cover"}
@@ -234,6 +269,7 @@ const CoverEditor = () => {
             author={author}
             color={color}
             animalImage={animalImage}
+            uploadedImage={uploadedImage}
             subtitlePlacement={subtitlePlacement}
           />
         </div>
