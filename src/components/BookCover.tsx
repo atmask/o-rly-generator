@@ -105,8 +105,6 @@ const BookCover = ({
         width: "500px",
         height: "700px",
         backgroundColor: "#fff",
-        userSelect: "none",
-        touchAction: "none", // Prevent default touch actions
       }}
     >
       {/* Hidden canvas for text measurement */}
@@ -147,9 +145,7 @@ const BookCover = ({
           src={uploadedImage ?? `./images/${animalImage}`}
           alt="Animal"
           maxDimension={395}
-          parentWidth={500}
-          parentHeight={700}
-          style={{ zIndex: 1 }}
+          style={{ position: "absolute", zIndex: 1 }}
         />
       )}
 
