@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Draggable from "react-draggable";
 import Image from "next/image";
 import { Resizable } from "re-resizable";
@@ -21,14 +21,41 @@ const DraggableImage = ({
   style,
   isGeneratingImage,
 }: DraggableImageProps) => {
-  // State for image dimensions
   const [imageDimensions, setImageDimensions] = useState<{
     width: number;
     height: number;
-  }>({ width: baseDimension, height: baseDimension });
+  } | null>(null);
+
+  // Load the image to get its natural dimensions
+  useEffect(() => {
+    const img = new window.Image();
+    img.src = src;
+    img.onload = () => {
+      const ar = img.naturalWidth / img.naturalHeight;
+
+      // Set initial dimensions based on aspect ratio
+      let width, height;
+      if (ar >= 1) {
+        width = baseDimension;
+        height = baseDimension / ar;
+      } else {
+        width = baseDimension * ar;
+        height = baseDimension;
+      }
+
+      setImageDimensions({
+        width,
+        height,
+      });
+    };
+  }, [src, baseDimension]);
 
   // Initial position for the image
   const defaultPosition = { x: 80, y: 40 };
+
+  if (!imageDimensions) {
+    return null;
+  }
 
   return (
     <Draggable
@@ -39,10 +66,10 @@ const DraggableImage = ({
     >
       <Resizable
         size={{ width: imageDimensions.width, height: imageDimensions.height }}
-        onResizeStop={(_e, _direction, _ref, d) => {
+        onResizeStop={(_e, _direction, _ref, delta) => {
           setImageDimensions({
-            width: imageDimensions.width + d.width,
-            height: imageDimensions.height + d.height,
+            width: imageDimensions.width + delta.width,
+            height: imageDimensions.height + delta.height,
           });
         }}
         maxWidth={maxDimension}
