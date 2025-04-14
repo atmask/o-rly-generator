@@ -48,9 +48,7 @@ const BookCover = ({
 
   useEffect(() => {
     // Create canvas if it doesn't exist
-    if (!canvasRef.current) {
-      canvasRef.current = document.createElement("canvas");
-    }
+    canvasRef.current ??= document.createElement("canvas");
 
     const { adjustedTitle, fontSize, totalHeight } = adjustTitle(
       title,

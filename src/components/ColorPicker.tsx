@@ -7,7 +7,6 @@ import {
 } from "~/components/ui/popover";
 import { cn } from "~/lib/utils";
 import { Paintbrush } from "lucide-react";
-import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 
 export default function ColorPicker({
