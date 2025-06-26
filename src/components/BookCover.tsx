@@ -184,7 +184,7 @@ const BookCover = ({
       <div style={subtitleStyle}>{subtitle}</div>
 
       {/* O RLY Logo */}
-      <div
+      {/* <div
         style={{
           position: "absolute",
           left: "20px",
@@ -208,7 +208,7 @@ const BookCover = ({
         >
           ?
         </span>
-      </div>
+      </div> */}
 
       {/* Author */}
       <div
